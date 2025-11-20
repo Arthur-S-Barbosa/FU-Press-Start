@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -13,6 +13,76 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Dark palette */
+  --black: #000000;
+  --black-dark-purple: #1f1b1f;
+  --black-dark-violet: #1e1b22;
+  --dark-petroleum-blue: #37384c;
+  --dark-purplish-gray: #3e3b50;
+  --violet-gray: #413e54;
+  --purple-graphite: #443f57;
+  --purple-anthracite: #3f3b52;
+
+  /* Green palette */
+  --spring-green: #2e4a42;
+  --submarine: #8d9c97;
+  --light-grayish-lime-green: #e8f2e8;
+
+  /* Neutral palette */
+  --white: #ffffff;
+  --bisque: #ffe4c4;
+  --antique-white: #faebd7;
+  --light-lilac-white: #eeeaf3;
+  --soft-lilac-white: #f5f2f7;
+  --lavender-white: #e8e4ee;
+  --lilac-ice: #e4e0eb;
+  --pink-ice: #ece7f1;
+
+  /* Purple palette */
+  --purple: #62487e;
+  --light-grayish-lavender: #aea0bb;
+  --grayish-purple: #7b6e8d;
+  --dark-eggplant: #584767;
+  --light-lavender: #c7bacd;
+  --light-violet: #8b7c9b;
+  --deep-purple: #5a3f60;
+  --light-matte-purple: #8c7a97;
+  --dark-purplish-wine: #c7bacd;
+  --pale-lavender-pink: #beb0c8;
+  --medium-lavender-pink: #8d7d9d;
+  --violet-wine: #5d4365;
+  --pastel-lilac: #c6bacf;
+
+  /* Orange palette */
+  --light-cream: #fff3e0;
+  --vibrant-orange: #ffa726;
+  --burnt-orange: #fb8c00;
+  --dark-orange: #f57c00;
+  --deep-orange: #e65100;
+}
+
+/* * {
+  cursor: none;
+} */
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+}
+
+.bg-fabula {
+  background-image: url("../assets/bg.png");
+  background-size: cover;
+}
+
+.app {
+  min-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 a {
@@ -28,7 +98,7 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
+  min-width: 100vw;
   min-height: 100vh;
 }
 
@@ -58,13 +128,6 @@ button:focus-visible {
 
 .card {
   padding: 2em;
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
 }
 
 @media (prefers-color-scheme: light) {
