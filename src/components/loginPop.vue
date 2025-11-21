@@ -1,13 +1,59 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from "vue";
+import { createUser, getUsers, updateUser, deleteUser } from "../firebase/userService.js";
 
 const emit = defineEmits(["login", "close"]);
 
+const users = ref([]);
+const editingId = ref(null);
 const username = ref("");
 const password = ref("");
+
+async function load() {
+    users.value = await getUsers();
+}
+
+async function add() {
+    await createUser({ name: username.value });
+    username.value = "";
+    load();
+}
+
+async function edit(user) {
+    editingId.value = user.id;
+    username.value = user.name;
+}
+
+async function saveEdit() {
+    await updateUser(editingId.value, { name: username.value });
+    editingId.value = null;
+    name.value = "";
+    load();
+}
+
+async function remove(id) {
+    await deleteUser(id);
+    load();
+}
+
+onMounted(load);
 </script>
 
 <template>
+    <div>
+        <input v-model="name" placeholder="Nome" />
+
+        <button v-if="!editingId" @click="add">Adicionar</button>
+        <button v-else @click="saveEdit">Salvar</button>
+
+        <ul>
+            <li v-for="u in users" :key="u.id">
+                {{ u.name }}
+                <button @click="edit(u)">Editar</button>
+                <button @click="remove(u.id)">Deletar</button>
+            </li>
+        </ul>
+    </div>
     <div class="fixed inset-0 bg-black/70 flex items-center justify-center">
         <div class="bg-gray-900 p-6 rounded-xl border border-gray-700 w-80">
             <h2 class="text-xl mb-4 text-center text-white">Login</h2>
