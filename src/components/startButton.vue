@@ -34,7 +34,6 @@ function clicou() {
 
 <style scoped>
 h1 {
-    margin-bottom: 20px;
     text-align: center;
     background: linear-gradient(to top, var(--vibrant-orange), var(--burnt-orange), var(--dark-orange), var(--deep-orange));
     background-clip: text;
@@ -78,8 +77,8 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100% !important;
-    height: fit-content;
+    width: fit-content !important;
+    height: fit-content !important;
     transition: all 0.5s ease;
 }
 
@@ -90,7 +89,6 @@ h1 {
 
 .blur {
     position: absolute;
-    width: 50%;
     height: auto;
     transition: all 0.5s ease;
     opacity: 1;
