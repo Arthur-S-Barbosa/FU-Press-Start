@@ -40,7 +40,7 @@ onMounted(load);
 </script>
 
 <template>
-    <div>
+    <!-- <div>
         <input v-model="name" placeholder="Nome" />
 
         <button v-if="!editingId" @click="add">Adicionar</button>
@@ -53,23 +53,20 @@ onMounted(load);
                 <button @click="remove(u.id)">Deletar</button>
             </li>
         </ul>
-    </div>
-    <div class="fixed inset-0 bg-black/70 flex items-center justify-center">
-        <div class="bg-gray-900 p-6 rounded-xl border border-gray-700 w-80">
-            <h2 class="text-xl mb-4 text-center text-white">Login</h2>
+    </div> -->
+    <div>
+        <div>
+            <h2>Login</h2>
 
-            <input v-model="username" placeholder="Usuário"
-                class="w-full mb-3 px-3 py-2 rounded bg-gray-800 text-white border border-gray-700" />
+            <input v-model="username" placeholder="Usuário" />
+            
+            <input v-model="password" type="password" placeholder="Senha" />
 
-            <input v-model="password" type="password" placeholder="Senha"
-                class="w-full mb-3 px-3 py-2 rounded bg-gray-800 text-white border border-gray-700" />
-
-            <button class="w-full mt-2 py-2 bg-blue-700 hover:bg-blue-600 rounded text-white"
-                @click="emit('login', { username, password })">
+            <button @click="emit('login', { username, password })">
                 Entrar
             </button>
 
-            <button class="w-full mt-2 py-1 text-gray-400 hover:text-white" @click="emit('close')">
+            <button @click="emit('close')">
                 Cancelar
             </button>
         </div>

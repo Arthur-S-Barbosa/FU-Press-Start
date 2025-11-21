@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from "vue";
 import startScreen from "./components/startScreen.vue";
 import loginPop from "./components/loginPop.vue";
@@ -9,7 +9,7 @@ function openLogin() {
     screen.value = "login";
 }
 
-function handleLogin(data: any) {
+function handleLogin(data) {
     console.log("🔐 Login frontend:", data);
     alert("Login enviado!\n(Aqui você conectaria ao backend)");
 }
@@ -45,7 +45,7 @@ function handleLogin(data: any) {
     <div class="app bg-fabula">
         <startScreen v-if="screen === 'start'" @start="openLogin" />
 
-        <login-pop v-if="screen === 'login'" @close="screen = 'start'" @login="handleLogin" />
+        <loginPop v-if="screen === 'login'" @close="screen = 'start'" @login="handleLogin" />
     </div>
     <!-- <div class="primary" @click="clicou">
         <h1 class="blur">{{ test }}</h1>
