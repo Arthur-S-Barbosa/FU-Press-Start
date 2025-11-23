@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import startScreen from "./components/startScreen.vue";
-import loginPop from "./components/loginPop.vue";
+import loginPop from "./components/loginOptions.vue";
 
 const screen = ref("start");
 
@@ -15,26 +15,17 @@ function handleLogin(data) {
 }
 
 onMounted(() => {
-    console.log(screen.value);
 });
 </script>
 
 <template>
     <div class="app bg-fabula">
         <startScreen v-if="screen == 'start'" @start="openLogin" />
-
         <loginPop v-if="screen == 'login'" @close="screen = 'start'" @login="handleLogin" />
     </div>
-    <!-- <div class="primary" @click="clicou">
-        <h1 class="blur">{{ test }}</h1>
-        <h1>{{ test }}</h1>
-        <h1 v-if="time" class="line">_</h1>
-    </div>
-    <p>{{ click }}</p> -->
 </template>
 
 <style scoped>
-/* ocupa a tela inteira */
 :host {
     display: block;
     height: 100vh;
