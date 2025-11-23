@@ -1,24 +1,24 @@
 <script setup>
 defineProps({
     show: { type: Boolean, default: false },
-    options: { type: Array, default: () => [] }
+    title: { type: String, default: "MAIN SCENARIO #??" },
+    subtitle: { type: String, default: "[SCENARIO TITLE]" },
 });
-const emit = defineEmits(["close", "select", "login"]);
-
-function selectOption(option) {
-    emit("select", option);
-}
+defineEmits(["close"]);
 </script>
 
 <template>
     <transition name="fade">
-        <div class="modal-overlay" v-if="show" @click="$emit('close')">
+        <div v-if="show" class="modal-overlay" @click="$emit('close')">
             <div class="scenario-window" @click.stop>
-                <div v-for="(option, index) in options" :key="index" class="option-wrapper">
-                    <button class="primary primary-hover" @click="selectOption(option)" >
-                        {{ option }}
-                    </button>
-                    <div v-if="index < options.length - 1" class="divider"></div>
+                <div class="scenario-header">
+                    <span class="window-title">■ □ ✖</span>
+                </div>
+                <h1 class="scenario-title">{{ title }}</h1>
+                <div class="divider"></div>
+                <h2 class="scenario-subtitle">{{ subtitle }}</h2>
+                <div class="scenario-content">
+                    <slot />
                 </div>
             </div>
         </div>
@@ -26,6 +26,7 @@ function selectOption(option) {
 </template>
 
 <style scoped>
+/* === OVERLAY === */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -37,6 +38,7 @@ function selectOption(option) {
     z-index: 9999;
 }
 
+/* === ANIMAÇÃO === */
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity .3s ease;
@@ -51,10 +53,6 @@ function selectOption(option) {
 .scenario-window {
     width: 600px;
     max-width: 90%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     background: linear-gradient(to bottom right,
             #2ad38a,
             #1fa566,
@@ -75,12 +73,7 @@ function selectOption(option) {
     text-align: center;
 }
 
-.option-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
+/* top-right fake window controls */
 .scenario-header {
     width: 100%;
     display: flex;
@@ -101,13 +94,13 @@ function selectOption(option) {
 }
 
 .divider {
-    width: 80% !important;
+    width: 80%;
     height: 3px;
     background: linear-gradient(to right,
             transparent,
-            rgba(255, 255, 255, 0.7),
+            #ffffff,
             transparent);
-    margin: 10px auto 10px;
+    margin: 12px auto 20px;
 }
 
 .scenario-subtitle {
@@ -123,25 +116,5 @@ function selectOption(option) {
     margin-inline: auto;
     font-size: 16px;
     line-height: 1.6;
-}
-
-.primary {
-    background: none !important;
-    margin: 0px;
-    border: none;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100% !important;
-    height: fit-content !important;
-    transition: all 0.5s ease;
-    font-family: "Press Start 2P", system-ui;
-}
-
-.primary-hover:hover {
-    scale: 1.05;
-    transition: all 0.5s ease;
 }
 </style>

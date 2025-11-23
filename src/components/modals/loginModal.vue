@@ -1,9 +1,45 @@
 <script setup>
+import { ref, onMounted, watch } from "vue";
+import { createUser, getUsers } from "../../firebase/services/userService.js";
+
 defineProps({
     show: { type: Boolean, default: false },
     select: { type: String, default: "" }
 });
-defineEmits(["close"]);
+
+const emit = defineEmits(["login", "close"]);
+
+const users = ref([]);
+const username = ref("");
+const email = ref("");
+const password = ref("");
+
+async function load() {
+    users.value = await getUsers();
+    console.log(users.value);
+}
+
+async function add() {
+    await createUser({ name: username.value });
+    username.value = "";
+    load();
+}
+
+onMounted(load);
+
+function checkLogin(email, password) {
+    users.value.forEach(user => {
+        if (user.email === email && user.password === password) {
+            emit("login", { username: user.name, email, password });
+            emit("close");
+        }
+    });
+}
+
+function checkRegister(username, email, password) {
+    console.log("Register attempt:", username, email, password);
+    emit("register", { username, email, password });
+}
 </script>
 
 <template>
@@ -12,10 +48,22 @@ defineEmits(["close"]);
             <div class="scenario-window" @click.stop>
                 <h1 class="scenario-title">{{ select }}</h1>
                 <div class="divider"></div>
-                <button class="primary primary-hover">
+                <input v-if="select == 'Cadastrar'" type="text" placeholder="Nome de usuário" v-model="username">
+                <input type="email" placeholder="Email" v-model="email">
+                <input type="password" placeholder="Senha" v-model="password">
+                <div class="divider"></div>
+                <button class="primary primary-hover" @click="() => {
+                    switch (select) {
+                        case 'Entrar':
+                            checkLogin(email, password)
+                            break;
+                        case 'Cadastrar':
+                            checkRegister(username, email, password);
+                            break;
+                    }
+                }">
                     {{ select }}
                 </button>
-                <div class="divider"></div>
             </div>
         </div>
     </transition>
@@ -43,7 +91,6 @@ defineEmits(["close"]);
     opacity: 0;
 }
 
-/* === JANELA ESTILO ORV === */
 .scenario-window {
     width: 600px;
     max-width: 90%;
@@ -89,7 +136,6 @@ defineEmits(["close"]);
     letter-spacing: 4px;
 }
 
-/* Titles */
 .scenario-title {
     font-size: 26px;
     margin: 10px 0;
@@ -134,10 +180,35 @@ defineEmits(["close"]);
     height: fit-content !important;
     transition: all 0.5s ease;
     font-family: "Press Start 2P", system-ui;
+    font-size: 10px;
 }
 
 .primary-hover:hover {
     scale: 1.05;
     transition: all 0.5s ease;
+}
+
+input {
+    width: 80%;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    color: white;
+    font-size: 16px;
+    transition: 0.2s;
+    text-align: center;
+    font-family: "Press Start 2P", system-ui;
+    font-size: 10px;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+input:focus {
+    background: rgba(255, 255, 255, 0.25);
 }
 </style>

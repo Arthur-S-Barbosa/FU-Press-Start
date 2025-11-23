@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import { createUser, getUsers, updateUser, deleteUser } from "../firebase/userService.js";
+import { createUser, getUsers, updateUser, deleteUser } from "../firebase/services/userService.js";
 import modal from "./modals/modal.vue";
 import optionsModal from "./modals/optionsModal.vue";
 import loginModal from "./modals/loginModal.vue";
@@ -49,6 +49,11 @@ function handleSelect(option) {
     selectedOption.value = option;
 }
 
+function handleLogin(data) {
+    emit("login", data);
+    emit("close");
+}
+
 watch(modalVisible, (newVal) => {
     if (!newVal) {
         emit("close");
@@ -80,7 +85,8 @@ watch(modalVisible, (newVal) => {
     </modal> -->
     <optionsModal :show="modalVisible" :options="['Cadastrar', 'Entrar']" @close="modalVisible = false"
         @select="handleSelect" />
-    <loginModal :show="selectedOption != ''" :select="selectedOption" @close="selectedOption = ''" />
+    <loginModal :show="selectedOption != ''" :select="selectedOption" @close="selectedOption = ''"
+        @login="handleLogin" />
     <!-- <div>
         <div>
             <h2>Login</h2>
