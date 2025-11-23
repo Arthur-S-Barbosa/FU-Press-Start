@@ -142,3 +142,15 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+button {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+button:focus,
+button:focus-visible,
+button:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
