@@ -1,9 +1,44 @@
-<<<<<<< HEAD
-# Vue 3 + TypeScript + Vite
-
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
-
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
-=======
 # FU-Press-Start
->>>>>>> 34e56ea276f34c778e3df59693cb0591e4de2f25
+
+O **FU-Press-Start** é um projeto com temática de videogame que apresenta uma tela inicial estilo “Press Start” e um sistema simples de navegação e interface.  
+Este repositório contém exclusivamente a interface do projeto, pronta para ser executada localmente.
+
+---
+
+## Como Executar o Projeto
+
+Siga os passos abaixo para rodar o projeto em sua máquina:
+
+### 1️⃣ Clonar o repositório
+
+```
+git clone https://github.com/Arthur-S-Barbosa/FU-Press-Start.git
+```
+
+### 2️⃣ Acessar a pasta do projeto
+
+```
+cd FU-Press-Start
+```
+
+### 3️⃣ Instalar as dependências
+
+```
+npm install
+```
+
+### 4️⃣ Rodar o servidor de desenvolvimento
+
+```
+npm run dev
+```
+
+Após isso, o projeto estará disponível no navegador, normalmente em:
+http://localhost:5173/
+
+---
+
+### Autor
+
+Arthur S. Barbosa.
+GitHub: https://github.com/Arthur-S-Barbosa
