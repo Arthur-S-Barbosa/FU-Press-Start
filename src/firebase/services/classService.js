@@ -11,8 +11,13 @@ import {
 
 const classRef = collection(db, "class");
 
-export async function createClass(classData) {
-  await addDoc(classRef, classData);
+export async function createClass(name, dmUid, password) {
+  return await addDoc(classRef, {
+    name,
+    dmId: dmUid,
+    actualScene: 1,
+    password: password
+  });
 }
 
 export async function getClasses() {

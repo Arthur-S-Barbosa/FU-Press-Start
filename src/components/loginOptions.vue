@@ -1,46 +1,17 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import { createUser, getUsers, updateUser, deleteUser } from "../firebase/services/userService.js";
-import modal from "./modals/modal.vue";
+import { getUsers } from "../firebase/services/userService.js";
 import optionsModal from "./modals/optionsModal.vue";
 import loginModal from "./modals/loginModal.vue";
 
 const modalVisible = ref(true);
 const selectedOption = ref("");
-
-const emit = defineEmits(["login", "close"]);
-
+const emit = defineEmits(["login", "close", "register"]);
 const users = ref([]);
-const editingId = ref(null);
-const username = ref("");
-const password = ref("");
 
 async function load() {
     users.value = await getUsers();
     console.log(users.value);
-}
-
-async function add() {
-    await createUser({ name: username.value });
-    username.value = "";
-    load();
-}
-
-async function edit(user) {
-    editingId.value = user.id;
-    username.value = user.name;
-}
-
-async function saveEdit() {
-    await updateUser(editingId.value, { name: username.value });
-    editingId.value = null;
-    name.value = "";
-    load();
-}
-
-async function remove(id) {
-    await deleteUser(id);
-    load();
 }
 
 onMounted(load);
@@ -54,6 +25,11 @@ function handleLogin(data) {
     emit("close");
 }
 
+function handleRegister(data) {
+    emit("register", data);
+    emit("close");
+}
+
 watch(modalVisible, (newVal) => {
     if (!newVal) {
         emit("close");
@@ -62,44 +38,10 @@ watch(modalVisible, (newVal) => {
 </script>
 
 <template>
-    <!-- <div>
-        <input v-model="name" placeholder="Nome" />
-
-        <button v-if="!editingId" @click="add">Adicionar</button>
-        <button v-else @click="saveEdit">Salvar</button>
-
-        <ul>
-            <li v-for="u in users" :key="u.id">
-                {{ u.name }}
-                <button @click="edit(u)">Editar</button>
-                <button @click="remove(u.id)">Deletar</button>
-            </li>
-        </ul>
-    </div> -->
-    <!-- <modal :show="modalVisible" title="MAIN SCENARIO #01" subtitle="[CONVINCE THE CONSTELLATIONS]"
-        @close="modalVisible = false">
-        <p><b>Category:</b> Main</p>
-        <p><b>Difficulty:</b> C ~ B</p>
-        <p><b>Conditions:</b> Explain the system</p>
-        <p><b>Reward:</b> 500 coins</p>
-    </modal> -->
     <optionsModal :show="modalVisible" :options="['Cadastrar', 'Entrar']" @close="modalVisible = false"
         @select="handleSelect" />
-    <loginModal :show="selectedOption != ''" :select="selectedOption" @close="selectedOption = ''"
-        @login="handleLogin" />
-    <!-- <div>
-        <div>
-            <h2>Login</h2>
-            <input v-model="username" placeholder="Usuário" />
-            <input v-model="password" type="password" placeholder="Senha" />
-            <button @click="emit('login', { username, password })">
-                Entrar
-            </button>
-            <button @click="emit('close')">
-                Cancelar
-            </button>
-        </div>
-    </div> -->
+    <loginModal :show="selectedOption != ''" :select="selectedOption" @close="selectedOption = ''" @login="handleLogin"
+        @register="handleRegister" />
 </template>
 
 <style scoped>
@@ -132,17 +74,12 @@ watch(modalVisible, (newVal) => {
 
 h2 {
     text-align: center;
-    /* background: linear-gradient(-320deg, var(--light-grayish-lime-green), var(--submarine), var(--spring-green)); */
     background: var(--spring-green);
     background-clip: text;
     background-size: 200% 200%;
 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
-    /* -webkit-animation: Animation 5s ease infinite;
-    -moz-animation: Animation 5s ease infinite;
-    animation: Animation 5s ease infinite; */
 }
 
 @-webkit-keyframes Animation {

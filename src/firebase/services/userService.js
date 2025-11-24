@@ -1,18 +1,41 @@
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut
+} from "firebase/auth";
+
 import {
   collection,
-  addDoc,
+  doc,
+  setDoc,
   getDocs,
-  onSnapshot,
   updateDoc,
-  deleteDoc,
-  doc
+  deleteDoc
 } from "firebase/firestore";
 
 const usersRef = collection(db, "users");
 
-export async function createUser(user) {
-  await addDoc(usersRef, user);
+export async function createUser(email, password, extraData = {}) {
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const user = userCredential.user;
+
+  await setDoc(doc(db, "users", user.uid), {
+    email: user.email,
+    uid: user.uid,
+    ...extraData
+  });
+
+  return user;
+}
+
+export async function loginUser(email, password) {
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  return userCredential.user;
+}
+
+export async function logoutUser() {
+  await signOut(auth);
 }
 
 export async function getUsers() {
@@ -23,20 +46,10 @@ export async function getUsers() {
   }));
 }
 
-export function watchUsers(callback) {
-  return onSnapshot(usersRef, snapshot => {
-    const users = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-    callback(users);
-  });
+export async function updateUserData(uid, data) {
+  await updateDoc(doc(db, "users", uid), data);
 }
 
-export async function updateUser(id, data) {
-  await updateDoc(doc(db, "users", id), data);
-}
-
-export async function deleteUser(id) {
-  await deleteDoc(doc(db, "users", id));
+export async function deleteUserData(uid) {
+  await deleteDoc(doc(db, "users", uid));
 }

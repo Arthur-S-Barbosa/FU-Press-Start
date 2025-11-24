@@ -1,22 +1,18 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import { createClass, getClasses, updateClass, deleteClass } from "../firebase/services/classService.js";
-import optionsModal from "./modals/optionsModal.vue";
-import loginModal from "./modals/loginModal.vue";
+import { createClass, getClasses } from "../firebase/services/classService.js";
+import acessClassModal from "./modals/acessClassModal.vue";
+import createClassModal from "./modals/createClassModal.vue";
 
-const modalVisible = ref(true);
-const selectedOption = ref("");
+const modalVisible = ref(false);
+const selectedOption = ref(null);
 
-const emit = defineEmits(["login", "close"]);
+const emit = defineEmits(["login", "close", "create"]);
 
 const classes = ref([]);
-const editingId = ref(null);
-const username = ref("");
-const password = ref("");
 
 async function load() {
     classes.value = await getClasses();
-    console.log(classes.value);
 }
 
 async function add() {
@@ -25,36 +21,23 @@ async function add() {
     load();
 }
 
-async function edit(user) {
-    editingId.value = user.id;
-    username.value = user.name;
-}
-
-async function saveEdit() {
-    await updateUser(editingId.value, { name: username.value });
-    editingId.value = null;
-    name.value = "";
-    load();
-}
-
-async function remove(id) {
-    await deleteUser(id);
-    load();
-}
-
 onMounted(load);
 
-function handleSelect(option) {
-    selectedOption.value = option;
-}
-
-function handleLogin(data) {
-    emit("login", data);
-    emit("close");
+function handleAccess(data) {
+    emit("access", data);
 }
 
 function selectRoom(room) {
-    emit("selectRoom", room);
+    selectedOption.value = room;
+}
+
+function addsClass() {
+    modalVisible.value = true;
+}
+
+function handleCreateClass(data) {
+    emit("create", data);
+    load();
 }
 
 watch(modalVisible, (newVal) => {
@@ -67,11 +50,12 @@ watch(modalVisible, (newVal) => {
 <template>
     <transition name="fade">
         <div class="modal-overlay">
-            <button class="secundary">+ Criar sala</button>
-
+            <button class="secundary" @click="addsClass()">+ Criar sala</button>
             <div v-for="room in classes" class="scenario-window">
                 <button class="primary primary-hover" @click="selectRoom(room)">{{ room.name }}</button>
             </div>
+            <acessClassModal :show="selectedOption" @close="selectedOption = null" :select="selectedOption" @access="handleAccess" />
+            <createClassModal :show="modalVisible" @close="modalVisible = false" @create="handleCreateClass" />
         </div>
     </transition>
 </template>

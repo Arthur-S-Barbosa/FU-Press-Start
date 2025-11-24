@@ -2,13 +2,17 @@
 import { ref, onMounted } from "vue";
 import startScreen from "./components/startScreen.vue";
 import loginPop from "./components/loginOptions.vue";
-import { createScene, getScenes, updateScene, deleteScene } from "./firebase/services/scenesService.js";
-import { createClass, getClasses, updateClass, deleteClass } from "./firebase/services/classService.js";
+import { getScenes } from "./firebase/services/scenesService.js";
+import { getClasses, createClass } from "./firebase/services/classService.js";
+import { createUser, getUsers, loginUser } from "./firebase/services/userService.js";
+import { getCharacters } from "./firebase/services/characterService.js";
 import classList from "./components/classList.vue";
 
 const scenes = ref([]);
 const screen = ref("start");
 const classes = ref([]);
+const users = ref([]);
+const characters = ref([]);
 let newScene;
 const activeUser = ref(null);
 
@@ -16,16 +20,41 @@ function openLogin() {
     screen.value = "login";
 }
 
-function handleLogin(data) {
-    activeUser.value = data;
-    console.log("Login frontend:", data);
-    // alert("Login enviado!\n(Aqui você conectaria ao backend)");
+function handleAccess(data) {
+    console.log("Accessed class:", data);
+}
+
+async function handleUserLogin(data) {
+    try {
+        const user = await loginUser(data.email, data.password);
+        activeUser.value = user;
+    } catch (err) {
+        alert("Email ou senha inválidos");
+        console.error(err);
+    }
+}
+
+async function handleUserRegister(data) {
+    try {
+        await createUser(data.email, data.password, {
+            name: data.username,
+        });
+        activeUser.value = user;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function handleCreateClass(data) {
+    await createClass(data.name, activeUser.value.uid, data.password);
 }
 
 onMounted(async () => {
     scenes.value = await getScenes();
     classes.value = await getClasses();
-    console.log("Classes loaded:", classes.value);
+    users.value = await getUsers();
+    characters.value = await getCharacters();
+    console.log(characters.value);
     newScene = scenes.value[0].history1;
 });
 </script>
@@ -33,8 +62,10 @@ onMounted(async () => {
 <template>
     <div class="app bg-fabula">
         <startScreen v-if="screen == 'start' && !activeUser" @start="openLogin" />
-        <loginPop v-if="screen == 'login' && !activeUser" @close="screen = 'start'" @login="handleLogin" />
-        <classList v-if="activeUser" />
+        <loginPop v-if="screen == 'login' && !activeUser" @close="screen = 'start'" @login="handleUserLogin"
+            @register="handleUserRegister" />
+        <classList v-if="activeUser" @create="handleCreateClass" @access="handleAccess" />
+
     </div>
 </template>
 

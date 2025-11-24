@@ -1,78 +1,41 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { getUsers, loginUser } from "../../firebase/services/userService.js";
+import { getClasses } from "../../firebase/services/classService.js";
 
 defineProps({
     show: { type: Boolean, default: false },
     select: { type: String, default: "" }
 });
 
-const emit = defineEmits(["login", "close", "register"]);
+const emit = defineEmits(["login", "close"]);
 
-const users = ref([]);
-const username = ref("");
-const email = ref("");
+const classes = ref([]);
 const password = ref("");
+const roomName = ref("");
 
-async function load() {
-    users.value = await getUsers();
-    console.log(users.value);
-}
-
-onMounted(load);
-
-async function checkLogin(email, password) {
-    if (!email || !password) {
-        alert("Preencha todos os campos");
-        return;
-    }
-    emit("login", { email: email, password: password });
+function handleCreateClass() {
+    emit("create", { name: roomName.value, password: password.value });
     emit("close");
 }
 
-function checkRegister(username, email, password) {
-    if (!email || !password || !username) {
-        alert("Preencha todos os campos");
-        return;
-    };
-    users.value.forEach(user => {
-        if (!(user.email === email)) {
-            if (!(user.name === username)) {
-                emit("register", { username, email, password });
-                emit("close");
-            } else {
-                alert("Nome de usuário já cadastrado!");
-                return;
-            }
-        } else {
-            alert("Email já cadastrado!");
-            return;
-        }
-    });
+async function load() {
+    classes.value = await getClasses();
 }
+
+onMounted(load);
 </script>
 
 <template>
     <transition name="fade">
         <div class="modal-overlay" v-if="show" @click="$emit('close')">
             <div class="scenario-window" @click.stop>
-                <h1 class="scenario-title">{{ select }}</h1>
+                <h1 class="scenario-title">Criar Sala</h1>
                 <div class="divider"></div>
-                <input v-if="select == 'Cadastrar'" type="text" placeholder="Nome de usuário" v-model="username">
-                <input type="email" placeholder="Email" v-model="email">
+                <input type="text" placeholder="Nome da Sala" v-model="roomName">
                 <input type="password" placeholder="Senha" v-model="password">
                 <div class="divider"></div>
-                <button class="primary primary-hover" @click="() => {
-                    switch (select) {
-                        case 'Entrar':
-                            checkLogin(email, password)
-                            break;
-                        case 'Cadastrar':
-                            checkRegister(username, email, password);
-                            break;
-                    }
-                }">
-                    {{ select }}
+                <button class="primary primary-hover" @click="handleCreateClass">
+                    Salvar
                 </button>
             </div>
         </div>
