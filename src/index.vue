@@ -21,7 +21,6 @@ function openLogin() {
 }
 
 function handleAccess(data) {
-    console.log("Accessed class:", data);
 }
 
 async function handleUserLogin(data) {
@@ -30,7 +29,6 @@ async function handleUserLogin(data) {
         activeUser.value = user;
     } catch (err) {
         alert("Email ou senha inválidos");
-        console.error(err);
     }
 }
 
@@ -41,7 +39,6 @@ async function handleUserRegister(data) {
         });
         activeUser.value = user;
     } catch (err) {
-        console.error(err);
     }
 }
 
@@ -54,7 +51,6 @@ onMounted(async () => {
     classes.value = await getClasses();
     users.value = await getUsers();
     characters.value = await getCharacters();
-    console.log(characters.value);
     newScene = scenes.value[0].history1;
 });
 </script>

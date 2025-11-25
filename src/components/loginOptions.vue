@@ -11,7 +11,6 @@ const users = ref([]);
 
 async function load() {
     users.value = await getUsers();
-    console.log(users.value);
 }
 
 onMounted(load);

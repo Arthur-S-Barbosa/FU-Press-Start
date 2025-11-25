@@ -1,11 +1,13 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import { createClass, getClasses } from "../firebase/services/classService.js";
+import { getClasses } from "../firebase/services/classService.js";
 import acessClassModal from "./modals/acessClassModal.vue";
 import createClassModal from "./modals/createClassModal.vue";
+import characterList from "./characterList.vue";
 
 const modalVisible = ref(false);
 const selectedOption = ref(null);
+const classAccessed = ref(null);
 
 const emit = defineEmits(["login", "close", "create"]);
 
@@ -15,16 +17,10 @@ async function load() {
     classes.value = await getClasses();
 }
 
-async function add() {
-    await createClass({ name: username.value });
-    username.value = "";
-    load();
-}
-
 onMounted(load);
 
 function handleAccess(data) {
-    emit("access", data);
+    classAccessed.value = data;
 }
 
 function selectRoom(room) {
@@ -54,8 +50,10 @@ watch(modalVisible, (newVal) => {
             <div v-for="room in classes" class="scenario-window">
                 <button class="primary primary-hover" @click="selectRoom(room)">{{ room.name }}</button>
             </div>
-            <acessClassModal :show="selectedOption" @close="selectedOption = null" :select="selectedOption" @access="handleAccess" />
+            <acessClassModal :show="selectedOption" @close="selectedOption = null" :select="selectedOption"
+                @access="handleAccess" />
             <createClassModal :show="modalVisible" @close="modalVisible = false" @create="handleCreateClass" />
+            <characterList :show="classAccessed" :roomId="classAccessed?.id" @close="classAccessed = null" />
         </div>
     </transition>
 </template>

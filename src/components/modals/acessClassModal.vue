@@ -4,7 +4,7 @@ import { getClasses } from "../../firebase/services/classService.js";
 
 const props = defineProps({
     show: { type: Boolean, default: false },
-    select: { type: String, default: "" }
+    select: { type: Object, default: null }
 });
 
 const emit = defineEmits(["login", "close", "access"]);
